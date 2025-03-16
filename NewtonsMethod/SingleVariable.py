@@ -6,7 +6,9 @@ It will run until I have x^{(10)}
 """
 import numpy as np
 import matplotlib.pyplot as plt
-plt.rcParams['text.usetex'] = True
+import matplotlib as mpl
+print(mpl.rcParams['text.usetex'])
+print(mpl.rcParams['text.latex.preamble'])
 
 # Establish initial guess and functions
 x = np.zeros(10)
