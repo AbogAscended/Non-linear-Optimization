@@ -1,5 +1,14 @@
 """
 Let f(x1,x2) = 2x1^4 + x2^2 - 4x1x2 + 5x2
+gradient = [8*x1**3 - 4*x2, -4*x1 + 2*x2 + 5]
+hessian = [[24*x1**2, -4], [-4, 2]]
+
+[[24*(0)**2, -4], [-4, 2]](x^(1) - [0,0]) = -[8*(0)**3 - 4*(0), -4*(0) + 2*(0) + 5]
+x^(1) = [1.25, 0]
+
+[[24*(1.25)**2, -4], [-4, 2]](x^(2) - [1.25,0]) = -[8*(1.25)**3 - 4*(0), -4*(1.25) + 2*(0) + 5]
+[[24*(1.25)**2, -4], [-4, 2]]([x1 - 1.25 , x2]) = -[8*(1.25)**3 - 4*(0), -4*(1.25) + 2*(0) + 5]
+x^(2) = [0.72033898, -1.05932203]
 """
 import numpy as np
 import sympy as sp
@@ -17,6 +26,8 @@ hessian  = [[sp.diff(g,var) for var in (x1,x2)] for g in gradient]
 fn = sp.lambdify((x1,x2), f, 'numpy')
 grad_fn = sp.lambdify((x1,x2), gradient, 'numpy')
 hess_fn = sp.lambdify((x1,x2), hessian, 'numpy')
+
+
 
 # Implementation of multivariable newtons method
 x = np.zeros((10,2), dtype= np.float64)
@@ -56,6 +67,26 @@ plt.title("Convergence of Newton's Method")
 plt.legend()
 plt.grid(True)
 plt.savefig('NewtonsMethod/graphs/multicontour.png')
+
+"""
+Let f(x1,x2) = 2x1^4 + x2^2 - 4x1x2 + 5x2
+gradient = [8*x1**3 - 4*x2, -4*x1 + 2*x2 + 5]
+[8*x1**3 - 4*x2, -4*x1 + 2*x2 + 5] = [0,0]
+(x1, x2) = (-1.3804089170137677, -5.260817834027535)
+There are also imaginary solutions but this is the only real solution
+"""
+solutions = sp.solve(gradient, (x1, x2))
+for sol in solutions:
+    print(f"x1 = {sol[0].evalf()}, x2 = {sol[1].evalf()}")
+
+"""
+Something that i find interesting is the methods based on newtons methods which
+improve it that we studied in MAT 4010 such as broydens method. Broydens method
+i find to be particularly interesting because as computing inverses is computationaly
+expensive we instead approximate the inverse and update it each time using a secant approx.
+This is known as broydens bad method opposed to broydens good method which approximatees the jacobian
+instead of the inverse jacobian but then uses a system of linear equations to solve it.
+"""
 
 
 
